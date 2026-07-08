@@ -6,6 +6,8 @@ import DashboardPage from "./pages/dashboard/DashboardPage";
 import PublicOnlyRoute from "./components/routing/PublicOnlyRoute";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
+import AppLayout from "./layouts/AppLayout";
+import ProjectsPage from "./pages/projects/ProjectsPage";
 
 export default function App() {
   const { isLoading } = useAuth();
@@ -27,7 +29,10 @@ export default function App() {
 
           {/* Protected routes - only accessible when logged in */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route element={<AppLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/projects" element={<ProjectsPage />} />
+            </Route>
           </Route>
 
           <Route path="/" element={<Navigate to="/login" replace />} />
