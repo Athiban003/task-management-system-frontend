@@ -4,9 +4,11 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { loginRequest } from "../../api/authApi";
 import { setTokens } from "../../services/authStore";
 import { showError, showSuccess } from "../../utils/toast";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -51,18 +53,17 @@ export default function LoginPage() {
         password,
       });
 
-      // Store tokens
-      setTokens({
+      login({
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       });
 
       showSuccess("Signed in successfully");
-
-      // Redirect to dashboard
       navigate("/dashboard", { replace: true });
     } catch (error) {
       // Handle error
+      console.error(error);
+
       const message =
         error.response?.data?.detail || "Login failed. Please try again.";
       showError(message);
