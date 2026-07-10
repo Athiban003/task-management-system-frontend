@@ -1,5 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { restoreTokens, setTokens, clearTokens } from "../services/authStore";
+import {
+  restoreTokens,
+  setTokens,
+  clearTokens,
+  onSessionExpired,
+} from "../services/authStore";
+import { useNavigate } from "react-router-dom";
 
 /**
  * AuthContext - Global authentication state
@@ -8,6 +14,7 @@ import { restoreTokens, setTokens, clearTokens } from "../services/authStore";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+  const navigate = useNavigate;
   const [tokens, setTokensState] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -15,8 +22,15 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const restored = restoreTokens();
     setTokensState(restored);
+
+    // Setup session expired handler
+    onSessionExpired(() => {
+      setTokensState(null);
+      navigate("/login", { replace: true });
+    });
+
     setIsLoading(false);
-  }, []);
+  }, [navigate]);
 
   // Login: store tokens and update state
   const login = (newTokens) => {

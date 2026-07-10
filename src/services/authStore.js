@@ -5,6 +5,11 @@
 let tokens = null;
 
 /**
+ * Session expired callback
+ */
+let sessionExpiredCallback = null;
+
+/**
  * Get current tokens from memory
  * @returns {{accessToken: string, refreshToken: string} | null}
  */
@@ -33,6 +38,7 @@ export function clearTokens() {
 
 /**
  * Restore tokens from localStorage on app startup
+ * @returns {{accessToken: string, refreshToken: string} | null}
  */
 export function restoreTokens() {
   const stored = localStorage.getItem("auth_tokens");
@@ -41,10 +47,26 @@ export function restoreTokens() {
       tokens = JSON.parse(stored);
       return tokens;
     } catch {
-      // Invalid JSON, clear it
       localStorage.removeItem("auth_tokens");
       return null;
     }
   }
   return null;
+}
+
+/**
+ * Register callback for when session expires
+ * @param {() => void} callback
+ */
+export function onSessionExpired(callback) {
+  sessionExpiredCallback = callback;
+}
+
+/**
+ * Notify that session has expired (token refresh failed)
+ * Clears tokens and calls the callback
+ */
+export function notifySessionExpired() {
+  clearTokens();
+  sessionExpiredCallback?.();
 }
