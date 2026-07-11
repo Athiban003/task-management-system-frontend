@@ -1,5 +1,6 @@
-import { Calendar, MoreVertical, Edit2, Trash2 } from "lucide-react";
+import { Calendar, MoreVertical, Edit2, Trash2, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 const statusColors = {
   ACTIVE: "bg-green-100 text-green-700",
@@ -71,6 +72,13 @@ export default function ProjectCard({ project, onEdit, onDelete }) {
             {/* Dropdown menu */}
             {menuOpen && (
               <div className="absolute right-0 mt-1 w-32 bg-white border border-slate-200 rounded-lg shadow-lg z-10">
+                <Link
+                  to={`/projects/${project.id}/members`}
+                  className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 border-b border-slate-200"
+                >
+                  <Users className="h-4 w-4" />
+                  Manage Members
+                </Link>
                 <button
                   type="button"
                   onClick={() => {

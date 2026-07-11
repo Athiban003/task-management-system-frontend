@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/routing/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
 import AppLayout from "./layouts/AppLayout";
 import ProjectsPage from "./pages/projects/ProjectsPage";
+import ProjectMembersPage from "./components/members/ProjectMembersPage";
 
 export default function App() {
   const { isLoading } = useAuth();
@@ -32,6 +33,10 @@ export default function App() {
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/projects" element={<ProjectsPage />} />
+              <Route
+                path="/projects/:projectId/members"
+                element={<ProjectMembersPage />}
+              />
             </Route>
           </Route>
 
